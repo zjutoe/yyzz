@@ -109,17 +109,17 @@ def book_finished_list_all(uid):
 if __name__ == '__main__':
     id = sys.argv[1]
 
-    with open('read_%s_wish.json' % id) as f:
+    with open('read_%s_wish.json' % id, 'w') as f:
         for b in book_wish_list_all(bwish):
-            f.writeline(b.tojson())
+            f.write(b.tojson() + '\n')
 
-    with open('read_%s_reading.json' % id) as f:
+    with open('read_%s_reading.json' % id, 'w') as f:
         for b in book_reading_list_all(bwish):
-            f.writeline(b.tojson())
+            f.write(b.tojson() + '\n')
 
 
-    with open('read_%s_finished.json' % id) as f:
+    with open('read_%s_finished.json' % id, 'w') as f:
         for b in book_finished_list_all(bwish):
-            f.writeline(b.tojson())
+            f.write(b.tojson() + '\n')
             
 
