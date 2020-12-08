@@ -10,6 +10,7 @@ import json
 
 
 def req_get(url):
+    time.sleep(1 + 2*random.random()) # sleep for a random period to avoid being banned
     return requests.get(url, headers = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safiri/537.36 SE 2.X MetaSr 1.0"})
     
 
@@ -78,7 +79,6 @@ def book_list_all(url):
         ret += parse_book_list(soup)
 
     for page in range(15, num_book, 15):
-        time.sleep(1 + 2*random.random()) # sleep for a random period to avoid being banned
         r = req_get(url + ('?sort=time&start=%d&filter=all&mode=grid&tags_sort=count' % page))
         if r.status_code == 200:
             soup = bs4.BeautifulSoup(r.text, 'html.parser')
