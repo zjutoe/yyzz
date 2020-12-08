@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+import random
+import time
+import sys
 import re
 import requests
 import bs4
+import json
 
 books = []
 
@@ -17,13 +21,24 @@ class Book:
         
         pic_a = div_pic.find('a')
         pic_img = div_pic.find('img')
-        self.url_book = pic_a['href']
+        self.url_douban = pic_a['href']
         self.url_cover = pic_img['src']
 
         info_a = div_info.find('a')
         self.title = info_a['title']
 
         self.pub = div_pub.text.strip()
+
+
+    def tojson(self):
+        j = {
+            'title':self.title,
+            'publish':self.pub,
+            'url_douban':self.url_douban,
+            'url_cover':self.url_cover,
+        }
+        return json.dumps(j)
+    
 
 
 def parse_book_list(soup):
@@ -63,6 +78,7 @@ def book_wish_list_all(bookurl):
         ret += parse_book_list(soup)
 
     for page in range(15, num_book, 15):
+        time.sleep(3*random.random())
         r = req_get(bookurl + ('?sort=time&start=%d&filter=all&mode=grid&tags_sort=count' % page))
         if r.status_code == 200:
             soup = bs4.BeautifulSoup(r.text, 'html.parser')
@@ -74,7 +90,12 @@ def book_wish_list_all(bookurl):
 # print(books)
 # href
 
-bwish = 'https://book.douban.com/people/zjutoe/wish'
-for b in book_wish_list_all(bwish):
-    print(b.title)
+if __name__ == '__main__':
+    id = sys.argv[1]
+
+    bwish = 'https://book.douban.com/people/%s/wish' % id
+
+    print(bwish)
+    for b in book_wish_list_all(bwish):
+        print(b.tojson())
 
